@@ -1,58 +1,59 @@
-name: Azure Static Web Apps CI/CD
+name: Build and deploy .NET Core application to Web App MyWorkingWebPage20250625112947
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+      - master
+
+env:
+  AZURE_WEBAPP_NAME: MyWorkingWebPage20250625112947
+  AZURE_WEBAPP_PACKAGE_PATH: MyWorkingWebPage\MyWorkingWebPage\published
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 8.0.x
+  WORKING_DIRECTORY: MyWorkingWebPage\MyWorkingWebPage
 
 jobs:
-  build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: ubuntu-latest
-    name: Build and Deploy Job
+  build:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: true
-          lfs: false
 
-      - name: Setup .NET
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
 
-      - name: Restore dependencies
-        run: dotnet restore MyWorkingWebPage.sln
+      - name: Restore
+        run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
 
-      - name: Build solution
-        run: dotnet build MyWorkingWebPage.sln --configuration Release --no-restore
+      - name: Build
+        run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
 
-      - name: Publish Blazor WebAssembly App
-        run: dotnet publish ./MyWorkingWebPage/MyWorkingWebPage.csproj --configuration Release --output ./publish --no-build
+      - name: Test
+        run: dotnet test "${{ env.WORKING_DIRECTORY }}" --no-build
 
-      - name: Deploy to Azure Static Web Apps
-        id: builddeploy
-        uses: Azure/static-web-apps-deploy@v1
+      - name: Publish
+        run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_SAND_04289B603 }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "./publish/wwwroot"
-          output_location: ""
-          skip_app_build: true
+          name: webapp
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
+  deploy:
+    runs-on: windows-latest
+    needs: build
     steps:
-      - name: Close Pull Request
-        id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_SAND_04289B603 }}
-          action: "close"
+          name: webapp
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - name: Deploy to Azure Web App using Publish Profile
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
