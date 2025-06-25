@@ -1,0 +1,165 @@
+﻿@page "/"
+@using MyWorkingWebPage.Providers
+@inject IEmailService EmailService
+<PageTitle>Home</PageTitle>
+
+<div class="wrapper">
+    <section id="home" class="sec-main">
+        <h1 class="main-heading">Where magic happens.</h1>
+    </section>
+
+    <section id="about" class="sec-about">
+        <div class="container">
+            <h1>About me</h1>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <p>
+                        Jeg er junior backendutvikler som liker å bygge ting som faktisk tåler bruk – og helst flere brukere samtidig. Ikke fordi det ser fancy ut på GitHub, men fordi det er sånn systemer bør oppføre seg.
+                        Jeg jobber helst med backendlogikk der man må ta stilling til arkitektur, dataflyt og hvordan ting henger sammen over tid – ikke bare få det til å «fungere». Har jobbet med meldingskøer, autentisering, API-er og ting som må snakke godt sammen uten å kræsje halvparten av tiden. Bruker det som gir mening: async, middleware, mappere, testbare moduler og alt som gjør at man slipper å gjette i prod.
+                        Jeg liker team hvor folk sier ting rett ut, tar ansvar og tåler at noen utfordrer løsningen – så lenge det er for å gjøre den bedre. Jeg lærer fort, men ikke fordi jeg er noe geni – jeg bare gjør jobben og spør når jeg står fast.
+                        Hvis du trenger noen som faktisk liker å rydde opp i kodebaser og som ikke får panikk av en kompleks integrasjon, så er det bare å ta kontakt.
+                        I en AI-verden er "prompt" det nye programmeringsspråket. Men slapp av – jeg foretrekker fortsatt semikolon fremfor komma 😉
+                    </p>
+                    <p>
+                        Hvis du vil ansette meg eller bare snakke, <a class="js-connect" href="#contact">kontakt</a> meg.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="sec-services">
+        <div class="container">
+            <h1>Hva jeg gjerne vil jobbe med</h1>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-4x fa-cloud"></i>
+
+                    <h2 class="h3">Skybaserte løsninger</h2>
+
+                    <p>Jeg bygger helst tjenester som kjører i skyen – skalerbare, distribuerte og enkle å drifte. Jeg utforsker Azure aktivt og forbereder meg til sertifisering, fordi jeg liker å forstå mer enn bare koden.</p>
+                </div>
+
+                <div class="col-sm-4">
+                    <i class="fa fa-4x fa-plug"></i>
+
+                    <h2 class="h3">Integrasjoner & API-er</h2>
+
+                    <p>Systemer som snakker med andre via API, meldingskøer eller webhooks – og der feil faktisk blir håndtert.</p>
+                </div>
+
+                <div class="col-sm-4">
+                    <i class="fa fa-4x fa-shield-alt"></i>
+
+                    <h2 class="h3">Sikkerhet & stabilitet</h2>
+
+                    <p>Jeg bryr meg om sikkerhet og forutsigbarhet. Kode skal ikke bare virke – den skal gjøre det trygt og konsekvent.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="testimonials" class="sec-testimonials">
+        <div class="container">
+            <h1>About me, but from others' perspective</h1>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <p class="text-center">
+                        "That Mikolaj guy? He’s the computer dude who could probably fix my toaster... if I had email. I don’t know what a C-sharp is, but it sounds drinkable.
+                        And you know what? I like that he handles everything — without beer! Respect."
+                    </p>
+
+                    <p class="text-right">&mdash; Homer Simpson</p>
+                </div>
+
+                <div class="col-sm-4">
+                    <p class="text-center">"Han sier lite, men koden hans snakker klart. Ser problemer før de oppstår. Du kan stole på at han gjør jobben – også når det brenner."</p>
+
+                    <p class="text-right">&mdash; Harry Hole</p>
+                </div>
+
+                <div class="col-sm-4">
+                    <p class="text-center">
+                        "Could he be any more reliable?
+                        He writes backend like I write sarcasm — (c)sharp, clean, and always on time.
+                        If you don’t hire him, can I? Just so I can feel productive by association."
+                    </p>
+
+                    <p class="text-right">&mdash; Chandler Bing</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <section id="contact" class="sec-contact">
+        <div class="container">
+            <h1>Contact me</h1>
+            <hr />
+
+            <div class="row" style="display: flex; justify-content: center;">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <EditForm Model="@form" OnValidSubmit="@SendEmail">
+                        <DataAnnotationsValidator />
+
+                        <div class="form-group">
+                            <InputText id="name" class="form-control input-lg" @bind-Value="form.Name" placeholder="Your name" />
+                            <ValidationMessage For="@(() => form.Name)" />
+                        </div>
+
+                        <div class="form-group">
+                            <InputText id="email" type="email" class="form-control input-lg" @bind-Value="form.Email" placeholder="Your email" />
+                            <ValidationMessage For="@(() => form.Email)" />
+                        </div>
+
+                        <div class="form-group">
+                            <InputTextArea id="message" class="form-control input-lg" @bind-Value="form.Message" rows="6" placeholder="Write your message here..." />
+                            <ValidationMessage For="@(() => form.Message)" />
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button class="btn btn-primary btn-lg" type="submit">Send Message <i class="fa fa-paper-plane"></i></button>
+                        </div>
+                    </EditForm>
+
+                    @if (!string.IsNullOrEmpty(statusMessage))
+                    {
+                        <div class="alert alert-info mt-3 text-center">@statusMessage</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+@code {
+    private ContactFormModel form = new();
+    private string statusMessage { get; set; } = string.Empty;
+
+    private async Task SendEmail()
+    {
+        var result = await EmailService.SendEmailAsync(form.Name, form.Email, form.Message);
+        statusMessage = result ? "Messsage sent successfully!" : "Failed to send message.";
+        if (result)
+        {
+            form = new ContactFormModel();
+        }
+    }
+
+    public class ContactFormModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+    }
+}
