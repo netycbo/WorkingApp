@@ -1,4 +1,4 @@
-name: Build and deploy Blazor WebAssembly app to Azure Static Web Apps
+name: Azure Static Web Apps CI/CD
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
           lfs: false
@@ -42,7 +42,7 @@ jobs:
           result-encoding: string
 
       - name: Publish Blazor WebAssembly App
-        run: dotnet publish ./Client/Client.csproj -c Release -o ./publish
+        run: dotnet publish ./MyWorkingWebPage/MyWorkingWebPage.csproj -c Release -o ./publish
 
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
@@ -51,7 +51,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "./publish/wwwroot"
-          output_location: "" # already prebuilt
+          output_location: ""
           github_id_token: ${{ steps.idtoken.outputs.result }}
 
   close_pull_request_job:
@@ -63,4 +63,5 @@ jobs:
         id: closepullrequest
         uses: Azure/static-web-apps-deploy@v1
         with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_SAND_04289B603 }}
           action: "close"
