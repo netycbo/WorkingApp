@@ -25,10 +25,10 @@ jobs:
         run: dotnet restore MyWorkingWebPage/MyWorkingWebPage.csproj
 
       - name: Build project
-        run: dotnet build MyWorkingWebPage/MyWorkingWebPage.csproj --configuration Release --no-restore
+        run: dotnet build . --configuration Release --no-restore
 
       - name: Publish Blazor WebAssembly
-        run: dotnet publish MyWorkingWebPage/MyWorkingWebPage.csproj --configuration Release --output publish
+        run: dotnet publish . --configuration Release --output publish
 
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
