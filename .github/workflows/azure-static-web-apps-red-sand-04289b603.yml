@@ -1,45 +1,66 @@
-name: Azure Static Web Apps CI/CD
+name: Build and deploy Blazor WebAssembly app to Azure Static Web Apps
 
 on:
   push:
     branches:
-      - main # Upewnij się, że to nazwa Twojej głównej gałęzi
+      - master
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - master # Upewnij się, że to nazwa Twojej głównej gałęzi
+      - master
 
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           submodules: true
+          lfs: false
 
-      - name: Setup .NET
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x' # Wersja .NET Twojego projektu
+          dotnet-version: 8.0.x
 
-      - name: Build and Publish
-        run: dotnet publish -c Release -o ./publish
-        
+      - name: Install OIDC Client from Core Package
+        run: npm install @actions/core@1.6.0 @actions/http-client
+
+      - name: Get Id Token
+        uses: actions/github-script@v6
+        id: idtoken
+        with:
+          script: |
+            const coredemo = require('@actions/core')
+            return await coredemo.getIDToken()
+          result-encoding: string
+
+      - name: Publish Blazor WebAssembly App
+        run: dotnet publish ./Client/Client.csproj -c Release -o ./publish
+
       - name: Deploy to Azure Static Web Apps
-        id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_SAND_04289B603 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          
-          ###### KRYTYCZNA ZMIANA PONIŻEJ ######
-          
-          # Wskazuje na folder z gotową aplikacją, który utworzyliśmy w kroku "Build and Publish"
-          app_location: "publish/wwwroot"
-          
-          # Pozostaw te pola puste lub skonfiguruj, jeśli używasz API / pliku konfiguracyjnego
-          api_location: ""
-          output_location: "" # To pole nie jest już potrzebne, bo sami budujemy aplikację
+          app_location: "./publish/wwwroot"
+          output_location: "" # already prebuilt
+          github_id_token: ${{ steps.idtoken.outputs.result }}
+
+  close_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request Job
+    steps:
+      - name: Close Pull Request
+        id: closepullrequest
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          action: "close"
