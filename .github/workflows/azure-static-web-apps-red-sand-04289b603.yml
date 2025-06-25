@@ -1,40 +1,27 @@
-# File: .github/workflows/deploy.yml
-
-name: Deploy Blazor WebAssembly to Azure Static Web Apps
+name: Deploy Blazor WebAssembly
 
 on:
   push:
     branches:
-      - master  # lub main, jeśli używasz innej
+      - master
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    name: Build and Deploy Blazor WASM
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore .
-
-      - name: Build project
-        run: dotnet build . --configuration Release --no-restore
-
-      - name: Publish Blazor WebAssembly
-        run: dotnet publish . --configuration Release --output publish
+      - name: Publish Blazor Client
+        run: dotnet publish MyWorkingWebPage.Client/MyWorkingWebPage.Client.csproj -c Release -o publish
 
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
-          skip_deploy_on_missing_secrets: true
-          action: "upload"
+          action: upload
           app_location: "publish/wwwroot"
-          output_location: ""
