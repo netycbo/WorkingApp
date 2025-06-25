@@ -1,0 +1,229 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+@inject HttpClient Http
+<PageTitle>Home</PageTitle>
+
+<div class="wrapper">
+    <section id="home" class="sec-main">
+        <h1 class="main-heading">Where magic happens.</h1>
+    </section>
+
+    <section id="about" class="sec-about">
+        <div class="container">
+            <h1>About me</h1>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <p>
+                        Jeg er junior backendutvikler som liker å bygge ting som faktisk tåler bruk – og helst flere brukere samtidig. Ikke fordi det ser fancy ut på GitHub, men fordi det er sånn systemer bør oppføre seg.
+                        Jeg jobber helst med backendlogikk der man må ta stilling til arkitektur, dataflyt og hvordan ting henger sammen over tid – ikke bare få det til å «fungere». Har jobbet med meldingskøer, autentisering, API-er og ting som må snakke godt sammen uten å kræsje halvparten av tiden. Bruker det som gir mening: async, middleware, mappere, testbare moduler og alt som gjør at man slipper å gjette i prod.
+                        Jeg liker team hvor folk sier ting rett ut, tar ansvar og tåler at noen utfordrer løsningen – så lenge det er for å gjøre den bedre. Jeg lærer fort, men ikke fordi jeg er noe geni – jeg bare gjør jobben og spør når jeg står fast.
+                        Hvis du trenger noen som faktisk liker å rydde opp i kodebaser og som ikke får panikk av en kompleks integrasjon, så er det bare å ta kontakt.
+                        I en AI-verden er "prompt" det nye programmeringsspråket. Men slapp av – jeg foretrekker fortsatt semikolon fremfor komma 😉
+                    </p>
+                    <p>
+                        Hvis du vil ansette meg eller bare snakke, <a class="js-connect" href="#contact">kontakt</a> meg.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="sec-services">
+        <div class="container">
+            <h1>Hva jeg gjerne vil jobbe med</h1>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-4x fa-cloud"></i>
+
+                    <h2 class="h3">Skybaserte løsninger</h2>
+
+                    <p>Jeg bygger helst tjenester som kjører i skyen – skalerbare, distribuerte og enkle å drifte. Jeg utforsker Azure aktivt og forbereder meg til sertifisering, fordi jeg liker å forstå mer enn bare koden.</p>
+                </div>
+
+                <div class="col-sm-4">
+                    <i class="fa fa-4x fa-plug"></i>
+
+                    <h2 class="h3">Integrasjoner & API-er</h2>
+
+                    <p>Systemer som snakker med andre via API, meldingskøer eller webhooks – og der feil faktisk blir håndtert.</p>
+                </div>
+
+                <div class="col-sm-4">
+                    <i class="fa fa-4x fa-shield-alt"></i>
+
+                    <h2 class="h3">Sikkerhet & stabilitet</h2>
+
+                    <p>Jeg bryr meg om sikkerhet og forutsigbarhet. Kode skal ikke bare virke – den skal gjøre det trygt og konsekvent.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="sec-testimonials">
+        <div class="container">
+            <h1>About me, but from others' perspective</h1>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <p class="text-center">
+                        "That Mikolaj guy? He's the computer dude who could probably fix my toaster... if I had email. I don't know what a C-sharp is, but it sounds drinkable.
+                        And you know what? I like that he handles everything — without beer! Respect."
+                    </p>
+
+                    <p class="text-right">&mdash; Homer Simpson</p>
+                </div>
+
+                <div class="col-sm-4">
+                    <p class="text-center">"Han sier lite, men koden hans snakker klart. Ser problemer før de oppstår. Du kan stole på at han gjør jobben – også når det brenner."</p>
+
+                    <p class="text-right">&mdash; Harry Hole</p>
+                </div>
+
+                <div class="col-sm-4">
+                    <p class="text-center">
+                        "Could he be any more reliable?
+                        He writes backend like I write sarcasm — (c)sharp, clean, and always on time.
+                        If you don't hire him, can I? Just so I can feel productive by association."
+                    </p>
+
+                    <p class="text-right">&mdash; Chandler Bing</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="sec-contact">
+        <div class="container">
+            <h1>Contact me</h1>
+            <hr />
+
+            <div class="row" style="display: flex; justify-content: center;">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <EditForm Model="@form" OnValidSubmit="@SendEmail">
+                        <DataAnnotationsValidator />
+
+                        <div class="form-group">
+                            <InputText id="name" class="form-control input-lg" @bind="form.Name" placeholder="Your name" />
+                            <ValidationMessage For="@(() => form.Name)" />
+                        </div>
+
+                        <div class="form-group">
+                            <InputText id="email" type="email" class="form-control input-lg" @bind="form.Email" placeholder="Your email" />
+                            <ValidationMessage For="@(() => form.Email)" />
+                        </div>
+
+                        <div class="form-group">
+                            <InputTextArea id="message" class="form-control input-lg" @bind="form.Message" rows="6" placeholder="Write your message here..." />
+                            <ValidationMessage For="@(() => form.Message)" />
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button class="btn btn-primary btn-lg" type="submit" disabled="@isLoading">
+                                @if (isLoading)
+                                {
+                                    <span>Sending... <i class="fa fa-spinner fa-spin"></i></span>
+                                }
+                                else
+                                {
+                                    <span>Send Message <i class="fa fa-paper-plane"></i></span>
+                                }
+                            </button>
+                        </div>
+                    </EditForm>
+
+                    @if (!string.IsNullOrEmpty(statusMessage))
+                    {
+                        <div class="alert @(isSuccess ? "alert-success" : "alert-danger") mt-3 text-center">
+                            @statusMessage
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@code {
+    private ContactFormModel form = new();
+    private string statusMessage { get; set; } = string.Empty;
+    private string Name { get; set; }
+    private string Email { get; set; }
+    private string Message { get; set; }
+    private bool isLoading = false;
+    private bool isSuccess = false;
+
+    private async Task SendEmail()
+    {
+        isLoading = true;
+        statusMessage = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            var emailData = new
+            {
+                FromName = form.Name,
+                FromEmail = form.Email,
+                Message = form.Message
+            };
+
+            var response = await Http.PostAsJsonAsync("/api/SendEmail", emailData);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<EmailResponse>();
+                isSuccess = result?.Success ?? false;
+                statusMessage = isSuccess ? "Message sent successfully!" : "Failed to send message.";
+
+                if (isSuccess)
+                {
+                    form = new ContactFormModel(); // Reset form
+                }
+            }
+            else
+            {
+                isSuccess = false;
+                statusMessage = "Failed to send message. Please try again.";
+            }
+        }
+        catch (Exception ex)
+        {
+            isSuccess = false;
+            statusMessage = "An error occurred. Please try again later.";
+            // Log error (można dodać logger jeśli potrzebny)
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    public class ContactFormModel
+    {
+        [Required(ErrorMessage = "Name is required")]
+        public string Name { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Message is required")]
+        [MinLength(10, ErrorMessage = "Message must be at least 10 characters")]
+        public string Message { get; set; } = string.Empty;
+    }
+
+    public class EmailResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = string.Empty;
+    }
+}
