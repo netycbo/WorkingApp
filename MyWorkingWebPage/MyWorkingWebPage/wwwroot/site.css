@@ -1,0 +1,221 @@
+﻿
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+/* Layout dla sekcji */
+.wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.sec-main, .sec-about, .sec-services, .sec-testimonials, .sec-contact {
+    padding: 60px 0;
+    min-height: 100vh;
+}
+
+.sec-main {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.main-heading {
+    font-size: 3.5rem;
+    font-weight: 300;
+    margin: 0;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Grid system */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -15px;
+}
+
+.col-sm-4, .col-sm-6 {
+    padding: 15px;
+}
+
+.col-sm-4 {
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
+}
+
+.col-sm-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.col-sm-offset-3 {
+    margin-left: 25%;
+}
+
+/* Typography */
+h1, h2 {
+    color: #333;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 40px 0;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+.input-lg {
+    padding: 20px;
+    font-size: 18px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+.btn-lg {
+    padding: 20px 40px;
+    font-size: 18px;
+}
+
+/* Alerts */
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+}
+
+/* Icons */
+.fa {
+    color: #667eea;
+    margin-bottom: 20px;
+}
+
+/* Text alignment */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+/* Sections styling */
+.sec-about, .sec-services, .sec-testimonials, .sec-contact {
+    background: white;
+}
+
+.sec-services {
+    background: #f8f9fa;
+}
+
+.sec-testimonials {
+    background: #e9ecef;
+}
+
+/* Responsywność */
+@media (max-width: 768px) {
+    .col-sm-4, .col-sm-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .col-sm-offset-3 {
+        margin-left: 0;
+    }
+
+    .main-heading {
+        font-size: 2.5rem;
+    }
+
+    .sec-main, .sec-about, .sec-services, .sec-testimonials, .sec-contact {
+        padding: 40px 0;
+        min-height: auto;
+    }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Links */
+.js-connect {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+    .js-connect:hover {
+        text-decoration: underline;
+    }
