@@ -41,8 +41,13 @@ jobs:
             return await coredemo.getIDToken()
           result-encoding: string
 
+      - name: List directory structure
+        run: |
+          ls -la
+          find . -name "*.csproj" -type f
+
       - name: Publish Blazor WebAssembly App
-        run: dotnet publish ./MyWorkingWebPage/MyWorkingWebPage.csproj -c Release -o ./publish
+        run: dotnet publish MyWorkingWebPage.sln -c Release -o ./publish
 
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
