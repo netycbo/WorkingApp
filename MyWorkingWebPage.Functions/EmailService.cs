@@ -55,7 +55,6 @@ namespace MyWorkingWebPage.Functions
             var smtpUser = config["Smtp:User"];
             var smtpPass = config["Smtp:Pass"];
             var smtpFrom = config["Smtp:From"];
-
             var email = new MimeMessage();
             email.From.Add(new MailboxAddress(fromName, smtpFrom));
             email.To.Add(MailboxAddress.Parse(smtpFrom));
